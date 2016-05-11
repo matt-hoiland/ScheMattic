@@ -1,5 +1,8 @@
 #include "token.hpp"
 
+#include <iostream>
+using namespace std;
+
 bool token::StartState::process(char data, string sym, IState*& next, IToken*& emitted) {
     if (isspace(data)) {
         next = new WhiteSpaceState();
@@ -15,6 +18,9 @@ bool token::StartState::process(char data, string sym, IState*& next, IToken*& e
             break;
         case '$':
             next = new StopState();
+            break;
+        case '\"':
+            next = new StringState();
             break;
         default:
             next = new SymbolState();
@@ -37,6 +43,9 @@ bool token::WhiteSpaceState::process(char data, string sym, IState*& next, IToke
     case '$':
         next = new StopState();
         break;
+    case '\"':
+        next = new StringState();
+        break;
     default:
         next = new SymbolState();
         break;
@@ -53,6 +62,8 @@ bool token::OpenParenState::process(char data, string sym, IState*& next, IToken
         next = new OpenParenState();
     } else if (data == ')') {
         next = new CloseParenState();
+    } else if (data == '\"') {
+        next = new StringState();
     } else if (data == '$') {
         next = new StopState();
     } else {
@@ -69,6 +80,8 @@ bool token::CloseParenState::process(char data, string sym, IState*& next, IToke
         next = new OpenParenState();
     } else if (data == ')') {
         next = new CloseParenState();
+    } else if (data == '\"') {
+        next = new StringState();
     } else if (data == '$') {
         next = new StopState();
     } else {
@@ -84,6 +97,8 @@ bool token::SymbolState::process(char data, string sym, IState*& next, IToken*& 
         next = new OpenParenState();
     } else if (data == ')') {
         next = new CloseParenState();
+    } else if (data == '\"') {
+        next = new StringState();
     } else if (data == '$') {
         next = new StopState();
     } else {
@@ -95,4 +110,16 @@ bool token::SymbolState::process(char data, string sym, IState*& next, IToken*& 
 
 bool token::StopState::process(char data, string sym, IState*& next, IToken*& emitted) {
     return false;
+}
+
+bool token::StringState::process(char data, string sym, IState*& next, IToken*& emitted) {
+    if (data == '$') {
+        next = new StopState();
+    } else if (data == '\"') {
+        next = new StartState();
+    } else {
+        return false;
+    }
+    emitted = new String(sym.substr(1));
+    return true;
 }

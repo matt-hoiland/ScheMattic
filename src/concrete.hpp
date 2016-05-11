@@ -78,6 +78,18 @@ namespace ConcreteSyntax {
             return out.str();
         }
     };
+    class StringExpression: public SExpression {
+    private:
+        string value;
+    public:
+        StringExpression(string s): value(s) {}
+        virtual string toString() { return toString(""); }
+        virtual string toString(string m) {
+            ostringstream out;
+            out << m << "\033[32;1m\"" << value << "\"\033[37;0m";
+            return out.str();
+        }
+    };
 
     class invalid_syntax: public exception {};
 
@@ -87,6 +99,7 @@ namespace ConcreteSyntax {
     private:
         static SExpression* parseList(token::TokenStream& tokens);
         static SExpression* parseSymbol(token::Symbol* token);
+        static SExpression* parseString(token::String* token);
     };
 } // end namespace parser
 

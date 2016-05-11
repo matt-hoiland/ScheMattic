@@ -16,6 +16,8 @@ SExpression* Parser::parse(token::TokenStream& tokens) {
         return parseSymbol(dynamic_cast<Symbol*>(token));
     } else if (dynamic_cast<CloseParen*>(token)) {
         throw invalid_syntax();
+    } else if (dynamic_cast<String*>(token)) {
+        return parseString(dynamic_cast<String*>(token));
     } else {
         return NULL;
     }
@@ -47,4 +49,8 @@ SExpression* Parser::parseSymbol(Symbol* token) {
         }
         return new SymbolExpression(token->Value());
     }
+}
+
+SExpression* Parser::parseString(String* token) {
+    return new StringExpression(token->Value());
 }

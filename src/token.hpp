@@ -43,6 +43,11 @@ namespace token {
         CloseParen() : IToken(")") {}
         virtual ~CloseParen() {}
     };
+    class String: public IToken {
+    public:
+        String(string s) : IToken(s) {}
+        virtual ~String() {}
+    };
 
     // States
     class StartState: public IState {
@@ -62,6 +67,10 @@ namespace token {
         virtual bool process(char data, string sym, IState*& next, IToken*& emitted);
     };
     class SymbolState: public IState {
+    public:
+        virtual bool process(char data, string sym, IState*& next, IToken*& emitted);
+    };
+    class StringState: public IState {
     public:
         virtual bool process(char data, string sym, IState*& next, IToken*& emitted);
     };
