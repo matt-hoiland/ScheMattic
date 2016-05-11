@@ -89,8 +89,13 @@ namespace token {
                     if (emitted) tokens.push_back(emitted);
                 }
             }
+            delete state;
         }
-        virtual ~TokenStream() {}
+        virtual ~TokenStream() {
+            for (auto t : tokens) {
+                delete t;
+            }
+        }
 
         bool hasNext() { return i < tokens.size(); }
         IToken* next() { return tokens[i++]; }
