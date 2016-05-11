@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include "concrete.hpp"
+using ConcreteSyntax::SExpression;
 #include "token.hpp"
 
 using namespace std;
@@ -19,8 +21,12 @@ int main() {
             done = true;
         }
         token::TokenStream stream(line);
-        while (stream.hasNext()) {
-            cout << stream.next()->Value() << endl;
+        cout << "streamed..." << endl;
+        SExpression* expr = ConcreteSyntax::Parser::parse(stream);
+        if (expr) {
+            cout << expr->toString() << endl;
+        } else {
+            cout << "NULL expression" << endl;
         }
     }
     cout << CLOSING << endl;

@@ -99,6 +99,8 @@ namespace token {
 
         bool hasNext() { return i < tokens.size(); }
         IToken* next() { return tokens[i++]; }
+        void advance() { i++; }
+        void retreat() { i--; }
     };
 
 } // end namespace token
