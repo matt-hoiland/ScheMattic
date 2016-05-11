@@ -21,12 +21,16 @@ int main() {
             done = true;
         }
         token::TokenStream stream(line);
-        cout << "streamed..." << endl;
-        SExpression* expr = ConcreteSyntax::Parser::parse(stream);
-        if (expr) {
-            cout << expr->toString() << endl;
-        } else {
-            cout << "NULL expression" << endl;
+        try {
+            SExpression* expr = ConcreteSyntax::Parser::parse(stream);
+            if (expr) {
+                cout << expr->toString() << endl;
+            } else {
+                cout << "NULL expression" << endl;
+            }
+            delete expr;
+        } catch (ConcreteSyntax::invalid_syntax& ex) {
+            cout << "!!! invalid syntax: \"" << line << "\"" << endl;
         }
     }
     cout << CLOSING << endl;
