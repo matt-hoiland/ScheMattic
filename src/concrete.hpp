@@ -30,6 +30,8 @@ namespace ConcreteSyntax {
             for (auto e : exprs) { delete e; }
         }
         void add(SExpression* expr) { exprs.push_back(expr); }
+        unsigned int size() { return exprs.size(); }
+        SExpression*& operator[](unsigned int i) { return exprs[i]; }
         virtual string toString() { return toString(""); }
         virtual string toString(string m) {
             ostringstream out;
@@ -47,6 +49,7 @@ namespace ConcreteSyntax {
     public:
         SymbolExpression(string v) : value(v) {}
         virtual ~SymbolExpression() {}
+        string symbol() { return value; }
         virtual string toString() { return toString(""); }
         virtual string toString(string m) {
             ostringstream out;
@@ -59,6 +62,7 @@ namespace ConcreteSyntax {
         double value;
     public:
         NumberExpression(double d): value(d) {}
+        double data() { return value; }
         virtual string toString() { return toString(""); }
         virtual string toString(string m) {
             ostringstream out;

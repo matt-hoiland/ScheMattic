@@ -1,7 +1,7 @@
 #include <iostream>
 
+#include "abstract.hpp"
 #include "concrete.hpp"
-using ConcreteSyntax::SExpression;
 #include "token.hpp"
 
 using namespace std;
@@ -22,9 +22,18 @@ int main() {
         }
         token::TokenStream stream(line);
         try {
-            SExpression* expr = ConcreteSyntax::Parser::parse(stream);
+            ConcreteSyntax::SExpression* expr = ConcreteSyntax::Parser::parse(stream);
             if (expr) {
                 cout << expr->toString() << endl;
+                AbstractSyntax::AE* ae = AbstractSyntax::parse(expr);
+                if (ae) {
+                    AbstractSyntax::AE* result = ae->eval();
+                    cout << result->toString() << endl;
+                    delete result;
+                } else {
+                    cout << "not arithmetic" << endl;
+                }
+                delete ae;
             } else {
                 cout << "NULL expression" << endl;
             }
