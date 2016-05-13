@@ -20,6 +20,7 @@ namespace AbstractSyntax {
 
     class AE {
     public:
+        virtual ~AE() {}
         virtual AE* eval() = 0;
         virtual string toString() = 0;
     };
@@ -28,6 +29,7 @@ namespace AbstractSyntax {
     private:
         double d;
     public:
+        virtual ~Number() {}
         Number(double d) : d(d) {}
         double Value() { return d; }
         virtual AE* eval() { return new Number(d); }
@@ -56,6 +58,7 @@ namespace AbstractSyntax {
                 delete B;
                 return n;
             }
+            return NULL;
         }
         virtual string toString() {
             ostringstream out;
@@ -69,6 +72,7 @@ namespace AbstractSyntax {
 
     class Adder: public Binop {
     public:
+        virtual ~Adder() {}
         Adder(AE *a, AE *b) : Binop(a, b) {}
         virtual double operate(double a, double b) {
             return a + b;
@@ -78,6 +82,7 @@ namespace AbstractSyntax {
 
     class Subtracter: public Binop {
     public:
+        virtual ~Subtracter() {}
         Subtracter(AE *a, AE *b) : Binop(a, b) {}
         virtual double operate(double a, double b) {
             return a - b;
@@ -87,6 +92,7 @@ namespace AbstractSyntax {
 
     class Multiplier: public Binop {
     public:
+        virtual ~Multiplier() {}
         Multiplier(AE *a, AE *b) : Binop(a, b) {}
         virtual double operate(double a, double b) {
             return a * b;
@@ -96,6 +102,7 @@ namespace AbstractSyntax {
 
     class Divider: public Binop {
     public:
+        virtual ~Divider() {}
         Divider(AE *a, AE *b) : Binop(a, b) {}
         virtual double operate(double a, double b) {
             return a / b;
@@ -119,6 +126,8 @@ namespace AbstractSyntax {
                     case '/': return new Divider(a, b);
                     }
                 }
+                delete a;
+                delete b;
             }
         } else if (dynamic_cast<SymbolExpression*>(sexp)) {
             return NULL;
