@@ -82,7 +82,7 @@ namespace token {
     class TokenStream {
     private:
         vector<IToken*> tokens;
-        int i = 0;
+        unsigned int i = 0;
     public:
         TokenStream(string line) {
             line += "$";
@@ -90,7 +90,7 @@ namespace token {
             IState* next = NULL;
             IToken* emitted = NULL;
             int last = 0;
-            for (int i = 0; i < line.size(); i++) {
+            for (unsigned int i = 0; i < line.size(); i++) {
                 if (state->process(line[i], line.substr(last, i - last), next, emitted)) {
                     delete state;
                     state = next;
