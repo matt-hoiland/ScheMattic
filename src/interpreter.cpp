@@ -8,6 +8,7 @@ using std::string;
 string Interpreter::LineInterpreter::interpret(istream& in, ostream& out) {
     string line;
     getline(in, line);
+    if (line == "") { return line; }
     token::TokenStream stream(line);
     try {
         ConcreteSyntax::SExpression* expr = ConcreteSyntax::Parser::parse(stream);
