@@ -1,3 +1,4 @@
 (import "test/arithmetic")
 (import "test/logic")
 (import "test/comparator")
+(import "test/conditional")
