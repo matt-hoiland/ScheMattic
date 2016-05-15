@@ -10,15 +10,14 @@ using std::ostringstream;
 using std::string;
 
 #include "concrete.hpp"
+#include "Environment.hpp"
 
 namespace AbstractSyntax {
-
-    class Environment;
 
     class SchemeExpression {
     public:
         virtual ~SchemeExpression() {}
-        virtual SchemeExpression* eval(Environment& env) = 0;
+        virtual ResultSyntax::Value* eval(ResultSyntax::Environment& env) = 0;
         virtual SchemeExpression* clone() = 0;
         virtual string toString() = 0;
     };

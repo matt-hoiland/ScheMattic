@@ -6,6 +6,10 @@
 using AbstractSyntax::Arithmetic::Number;
 #include "Logic.hpp"
 using AbstractSyntax::Logic::Boolean;
+#include "result.hpp"
+using ResultSyntax::BooleanValue;
+using ResultSyntax::NumberValue;
+using ResultSyntax::Value;
 
 namespace AbstractSyntax {
     namespace Comparator {
@@ -21,16 +25,16 @@ namespace AbstractSyntax {
         public:
             NumericComparator(SchemeExpression* a, SchemeExpression* b) : a(a), b(b) {}
             virtual ~NumericComparator() { delete a; delete b; }
-            virtual SchemeExpression* eval(Environment& env) {
-                SchemeExpression* sa = a->eval(env);
-                SchemeExpression* sb = b->eval(env);
-                SchemeExpression* sc = NULL;
-                Number *na = NULL, *nb = NULL;
-                if ((na = dynamic_cast<Number*>(sa)) != NULL &&
-                    (nb = dynamic_cast<Number*>(sb)) != NULL) {
-                    double da = na->Value();
-                    double db = nb->Value();
-                    sc = new Boolean(compare(da, db));
+            virtual ResultSyntax::Value* eval(Environment& env) {
+                Value* sa = a->eval(env);
+                Value* sb = b->eval(env);
+                Value* sc = NULL;
+                NumberValue *na = NULL, *nb = NULL;
+                if ((na = dynamic_cast<NumberValue*>(sa)) != NULL &&
+                    (nb = dynamic_cast<NumberValue*>(sb)) != NULL) {
+                    double da = na->val();
+                    double db = nb->val();
+                    sc = new BooleanValue(compare(da, db));
                 }
                 delete sb;
                 delete sa;
@@ -91,22 +95,22 @@ namespace AbstractSyntax {
             Equal(SchemeExpression* a, SchemeExpression* b) : a(a), b(b) {}
             virtual ~Equal() { delete a; delete b; }
             virtual SchemeExpression* clone() { return new Equal(a->clone(), b->clone()); }
-            virtual SchemeExpression* eval(Environment& env) {
-                SchemeExpression* sa = a->eval(env);
-                SchemeExpression* sb = b->eval(env);
-                SchemeExpression* sc = NULL;
-                Boolean *ba = NULL, *bb = NULL;
-                Number *na = NULL, *nb = NULL;
-                if ((ba = dynamic_cast<Boolean*>(sa)) != NULL &&
-                    (bb = dynamic_cast<Boolean*>(sb)) != NULL) {
-                    bool da = ba->Value();
-                    bool db = bb->Value();
-                    sc = new Boolean(da == db);
-                } else if ((na = dynamic_cast<Number*>(sa)) != NULL &&
-                           (nb = dynamic_cast<Number*>(sb)) != NULL) {
-                    double da = na->Value();
-                    double db = nb->Value();
-                    sc = new Boolean(da == db);
+            virtual ResultSyntax::Value* eval(Environment& env) {
+                Value* sa = a->eval(env);
+                Value* sb = b->eval(env);
+                Value* sc = NULL;
+                BooleanValue *ba = NULL, *bb = NULL;
+                NumberValue *na = NULL, *nb = NULL;
+                if ((ba = dynamic_cast<BooleanValue*>(sa)) != NULL &&
+                    (bb = dynamic_cast<BooleanValue*>(sb)) != NULL) {
+                    bool da = ba->val();
+                    bool db = bb->val();
+                    sc = new BooleanValue(da == db);
+                } else if ((na = dynamic_cast<NumberValue*>(sa)) != NULL &&
+                           (nb = dynamic_cast<NumberValue*>(sb)) != NULL) {
+                    double da = na->val();
+                    double db = nb->val();
+                    sc = new BooleanValue(da == db);
                }
                 delete sb;
                 delete sa;

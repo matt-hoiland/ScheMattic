@@ -6,6 +6,11 @@
 #include "String.hpp"
 #include "Symbol.hpp"
 
+#include "closure.hpp"
+using ResultSyntax::BooleanValue;
+using ResultSyntax::ClosureValue;
+using ResultSyntax::Value;
+
 namespace AbstractSyntax {
     namespace Keyword {
 
@@ -21,7 +26,7 @@ namespace AbstractSyntax {
             Import(String* f) : file(f) {}
             virtual ~Import() { delete file; }
             virtual SchemeExpression* clone() { return new Import(file); }
-            virtual SchemeExpression* eval(Environment& env) {
+            virtual ResultSyntax::Value* eval(Environment& env) {
                 Interpreter::FileInterpreter filer(file->Value() + ".scheme");
                 filer.interpret(cout, env);
                 return NULL;
@@ -40,12 +45,12 @@ namespace AbstractSyntax {
                 : cond(b), cons(c), alt(a) {}
             virtual ~Conditional() { delete cond; delete cons; delete alt; }
             virtual SchemeExpression* clone() { return new Conditional(cond->clone(), cons->clone(), alt->clone()); }
-            virtual SchemeExpression* eval(Environment& env) {
-                SchemeExpression* s = cond->eval(env);
-                Boolean* b = dynamic_cast<Boolean*>(s);
-                SchemeExpression* ret = NULL;
+            virtual ResultSyntax::Value* eval(Environment& env) {
+                Value* s = cond->eval(env);
+                BooleanValue* b = dynamic_cast<BooleanValue*>(s);
+                Value* ret = NULL;
                 if (b) {
-                    if (b->Value()) {
+                    if (b->val()) {
                         ret = cons->eval(env);
                     } else {
                         ret = alt->eval(env);
@@ -66,47 +71,23 @@ namespace AbstractSyntax {
             Definition(SchemeExpression *sym, SchemeExpression *bond) : sym(sym), bond(bond) {}
             virtual ~Definition() { delete sym; delete bond; }
             virtual SchemeExpression* clone() { return new Definition(sym->clone(), bond->clone()); }
-            virtual SchemeExpression* eval(Environment& env) {
+            virtual ResultSyntax::Value* eval(Environment& env) {
                 Symbol *symbol = dynamic_cast<Symbol*>(sym);
+                // cout<< "binding symbol: " << symbol->toString() << endl;
                 if (symbol) {
-                    SchemeExpression* be = bond->eval(env);
+                    // cout<< "prebond: " << bond->toString() << endl;
+                    Value* be = bond->eval(env);
+                    // cout<< "bond: " << (be ? be->toString() : "null") << endl;
                     env.bind(symbol->Value(), be);
-                    return be->eval(env);
+                    // cout<< "curr env: " << env.toString() << endl;
+                    return be->clone();
                 } else {
+                    // cout<< "returning null" << endl;
                     return NULL;
                 }
             }
             virtual string toString() {
                 return "(define " + sym->toString() + " " + bond->toString() + ")";
-            }
-        };
-
-        class Closure: public KE {
-        private:
-            Environment env;
-            vector<string> params;
-            SchemeExpression *body;
-        public:
-            Closure(Environment env, vector<string> params, SchemeExpression *body)
-                : env(env), params(params), body(body) {}
-            virtual ~Closure() { delete body; }
-            virtual SchemeExpression* clone() { return new Closure(env, params, body->clone()); }
-            Environment getEnv() { return env; }
-            vector<string> getParams() { return params; }
-            SchemeExpression* getBody() { return body; }
-            virtual SchemeExpression* eval(Environment& env) {
-                return new Closure(this->env, params, body->eval(env));
-            }
-            virtual string toString() {
-                ostringstream out;
-                out << "(closure (";
-                for (unsigned int i = 0; i < params.size(); i++) {
-                    out << params[i] << (i < params.size() - 1 ? " " : "");
-                }
-                out << ") " << body->toString() << " ";
-                out << env.toString();
-                out << ")";
-                return out.str();
             }
         };
 
@@ -118,8 +99,12 @@ namespace AbstractSyntax {
             Lambda(vector<string> params, SchemeExpression* body) : params(params), body(body) {}
             virtual ~Lambda() { delete body; }
             virtual SchemeExpression* clone() { return new Lambda(params, body->clone()); }
-            virtual SchemeExpression* eval(Environment& env) {
-                return new Closure(env, params, body->eval(env));
+            virtual ResultSyntax::Value* eval(Environment& env) {
+                // cout<< "eval lambda" << endl;
+                SchemeExpression* clone = body->clone();
+                // cout<< "clone: " << (clone ? clone->toString() : "null") << endl;
+                // cout<< "env: " << env.toString() << endl;
+                return new ClosureValue(env, params, clone);
             }
             virtual string toString() {
                 ostringstream out;
@@ -149,14 +134,14 @@ namespace AbstractSyntax {
                 }
                 return new Application(clones);
             }
-            virtual SchemeExpression* eval(Environment& env) {
-                SchemeExpression* ret = NULL;
+            virtual ResultSyntax::Value* eval(Environment& env) {
+                Value* ret = NULL;
                 if (exprs.size() == 0) { return NULL; }
-                cout << "Application eval" << endl;
-                cout << exprs[0]->toString() << endl;
-                SchemeExpression *first = exprs[0]->eval(env);
-                Closure *func = dynamic_cast<Closure*>(first);
-                cout << first->toString() << endl;
+                // cout<< "Application eval" << endl;
+                // cout<< exprs[0]->toString() << endl;
+                Value *first = exprs[0]->eval(env);
+                ClosureValue *func = dynamic_cast<ClosureValue*>(first);
+                // cout<< first->toString() << endl;
                 if (func) {
                     Environment boundEnv = func->getEnv();
                     vector<string> paramSyms = func->getParams();
@@ -165,9 +150,12 @@ namespace AbstractSyntax {
                         for (unsigned int i = 1; i < exprs.size(); i++) {
                             boundEnv.bind(paramSyms[i - 1], exprs[i]->eval(env));
                         }
-                        cout << boundEnv.toString() << endl;
-                        cout << boundBody->toString() << endl;
+                        // cout<< boundEnv.toString() << endl;
+                        // cout<< boundBody->toString() << endl;
                         ret = boundBody->eval(boundEnv);
+                        for (unsigned int i = 0; i < paramSyms.size(); i++) {
+                            boundEnv.unbind();
+                        }
                     }
                 }
                 delete first;

@@ -2,6 +2,9 @@
 #define ARITHMETIC_HPP_
 
 #include "abstract.hpp"
+#include "result.hpp"
+using ResultSyntax::Environment;
+using ResultSyntax::NumberValue;
 
 namespace AbstractSyntax {
     namespace Arithmetic {
@@ -18,7 +21,7 @@ namespace AbstractSyntax {
             virtual ~Number() {}
             Number(double d) : d(d) {}
             double Value() { return d; }
-            virtual SchemeExpression* eval(Environment& env) { return new Number(d); }
+            virtual ResultSyntax::Value* eval(Environment& env) { return new NumberValue(d); }
             virtual SchemeExpression* clone() { return new Number(d); }
             virtual string toString() {
                 ostringstream out;
@@ -36,18 +39,18 @@ namespace AbstractSyntax {
                 delete a;
                 delete b;
             }
-            virtual SchemeExpression* eval(Environment& env) {
-                SchemeExpression *sa = a->eval(env), *sb = b->eval(env);
-                Number* A = dynamic_cast<Number*>(sa);
-                Number* B = dynamic_cast<Number*>(sb);
-                SchemeExpression* ret = NULL;
+            virtual ResultSyntax::Value* eval(Environment& env) {
+                ResultSyntax::Value *sa = a->eval(env), *sb = b->eval(env);
+                NumberValue* A = dynamic_cast<NumberValue*>(sa);
+                NumberValue* B = dynamic_cast<NumberValue*>(sb);
+                ResultSyntax::Value* ret = NULL;
                 if (A && B) {
-                    ret = new Number(operate(A->Value(), B->Value()));
+                    ret = new NumberValue(operate(A->val(), B->val()));
                     delete A;
                     delete B;
                     return ret;
                 }
-                return make(sa, sb);
+                return NULL;
             }
             virtual string toString() {
                 ostringstream out;

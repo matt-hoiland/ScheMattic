@@ -1,6 +1,6 @@
 #include "interpreter.hpp"
 
-using AbstractSyntax::Environment;
+using ResultSyntax::Environment;
 using std::ifstream;
 using std::istream;
 using std::ostream;
@@ -22,7 +22,7 @@ string Interpreter::LineInterpreter::interpret(istream& in, ostream& out, Enviro
             out << expr->toString() << endl;
             AbstractSyntax::SchemeExpression* se = AbstractSyntax::parse(expr);
             if (se) {
-                AbstractSyntax::SchemeExpression* result = se->eval(env);
+                ResultSyntax::Value* result = se->eval(env);
                 out << (result != NULL ? result->toString() + "\n" : "");
                 delete result;
                 delete se;

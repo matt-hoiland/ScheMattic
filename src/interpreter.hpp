@@ -12,7 +12,7 @@ using std::string;
 #include "abstract.hpp"
 #include "concrete.hpp"
 #include "Environment.hpp"
-using AbstractSyntax::Environment;
+using ResultSyntax::Environment;
 #include "token.hpp"
 
 namespace Interpreter {

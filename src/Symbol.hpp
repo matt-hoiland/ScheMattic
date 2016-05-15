@@ -6,6 +6,8 @@ using std::string;
 
 #include "abstract.hpp"
 #include "Environment.hpp"
+using ResultSyntax::Environment;
+using ResultSyntax::Value;
 
 namespace AbstractSyntax {
     class Symbol: public SchemeExpression {
@@ -16,11 +18,9 @@ namespace AbstractSyntax {
         virtual ~Symbol() {}
         string Value() { return s; }
         virtual SchemeExpression* clone() { return new Symbol(s); }
-        virtual SchemeExpression* eval(Environment& env) {
-            SchemeExpression* se = env.find(s);
-            if (se) { return se->eval(env); }
-            cout << "symbol: " << s << endl;
-            return new Symbol(s);
+        virtual ResultSyntax::Value* eval(Environment& env) {
+            if (env.find(s)) { return env.find(s)->clone(); }
+            return NULL;
         }
         virtual string toString() { return s; }
     };
