@@ -1,5 +1,6 @@
 #include "abstract.hpp"
 #include "Arithmetic.hpp"
+#include "Comparator.hpp"
 #include "concrete.hpp"
 using ConcreteSyntax::BooleanExpression;
 using ConcreteSyntax::ListExpression;
@@ -29,6 +30,16 @@ namespace AbstractSyntax {
                         return new Logic::And(a, b);
                     } else if (s == "or") {
                         return new Logic::Or(a, b);
+                    } else if (s == "<") {
+                        return new Comparator::LessThan(a, b);
+                    } else if (s == "<=") {
+                        return new Comparator::LessEqual(a, b);
+                    } else if (s == "=") {
+                        return new Comparator::Equal(a, b);
+                    } else if (s == ">=") {
+                        return new Comparator::GreaterEqual(a, b);
+                    } else if (s == ">") {
+                        return new Comparator::GreaterThan(a, b);
                     }
                 }
                 delete a;
