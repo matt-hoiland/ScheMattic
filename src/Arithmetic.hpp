@@ -1,5 +1,5 @@
-#ifndef ARITHMETIC_H_
-#define ARITHMETIC_H_
+#ifndef ARITHMETIC_HPP_
+#define ARITHMETIC_HPP_
 
 #include "abstract.hpp"
 
@@ -99,4 +99,4 @@ namespace AbstractSyntax {
     } // end namespace Arithmetic
 } // end namespace AbstractSyntax
 
-#endif /* ARITHMETIC_H_ */
+#endif /* ARITHMETIC_HPP_ */

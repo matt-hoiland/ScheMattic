@@ -1,5 +1,5 @@
-#ifndef LOGIC_H_
-#define LOGIC_H_
+#ifndef LOGIC_HPP_
+#define LOGIC_HPP_
 
 #include "abstract.hpp"
 
@@ -95,4 +95,4 @@ namespace AbstractSyntax {
     } // end namespace Logic
 } // end namespace AbstractSyntax
 
-#endif /* LOGIC_H_ */
+#endif /* LOGIC_HPP_ */

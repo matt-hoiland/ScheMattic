@@ -1,5 +1,5 @@
-#ifndef LISTPARSER_HPP_
-#define LISTPARSER_HPP_
+#ifndef CONCRETE_HPP_
+#define CONCRETE_HPP_
 
 #include <iostream>
 using std::endl;
@@ -109,4 +109,4 @@ namespace ConcreteSyntax {
     };
 } // end namespace parser
 
-#endif /* LISTPARSER_HPP_ */
+#endif /* CONCRETE_HPP_ */

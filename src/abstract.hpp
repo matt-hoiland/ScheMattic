@@ -1,5 +1,5 @@
-#ifndef ABSTRACT_H_
-#define ABSTRACT_H_
+#ifndef ABSTRACT_HPP_
+#define ABSTRACT_HPP_
 
 #include <iostream>
 using std::cout;
@@ -35,4 +35,4 @@ namespace AbstractSyntax {
 
 } // end namespace AbstractSyntax
 
-#endif /* ABSTRACT_H_ */
+#endif /* ABSTRACT_HPP_ */
