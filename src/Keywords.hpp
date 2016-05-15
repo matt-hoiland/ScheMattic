@@ -30,6 +30,32 @@ namespace AbstractSyntax {
             }
         };
 
+        class Conditional: public KE {
+        private:
+            SchemeExpression *cond, *cons, *alt;
+        public:
+            Conditional(SchemeExpression *b, SchemeExpression *c, SchemeExpression* a)
+                : cond(b), cons(c), alt(a) {}
+            virtual ~Conditional() { delete cond; delete cons; delete alt; }
+            virtual SchemeExpression* eval() {
+                SchemeExpression* s = cond->eval();
+                Boolean* b = dynamic_cast<Boolean*>(s);
+                SchemeExpression* ret = NULL;
+                if (b) {
+                    if (b->Value()) {
+                        ret = cons->eval();
+                    } else {
+                        ret = alt->eval();
+                    }
+                }
+                delete s;
+                return ret;
+            }
+            virtual string toString() {
+                return "(if " + cond->toString() + " " + cons->toString() + " " + alt->toString() + ")";
+            }
+        };
+
     } // end namespace Keyword
 } // end namespace AbstractSyntax
 

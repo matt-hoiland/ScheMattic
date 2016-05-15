@@ -56,6 +56,17 @@ namespace AbstractSyntax {
                         if (a) { return new Keyword::Import(s); }
                     }
                 }
+            } else if (li->size() == 4) {
+                SchemeExpression* cond = parse((*li)[1]);
+                SchemeExpression* cons = parse((*li)[2]);
+                SchemeExpression* alt = parse((*li)[3]);
+                SymbolExpression* op = dynamic_cast<SymbolExpression*>((*li)[0]);
+                if (op) {
+                    string s = op->symbol();
+                    if (s == "if") {
+                        return new Keyword::Conditional(cond, cons, alt);
+                    }
+                }
             }
         } else if (dynamic_cast<SymbolExpression*>(sexp)) {
             return NULL;
