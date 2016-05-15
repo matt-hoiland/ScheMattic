@@ -19,11 +19,12 @@ namespace AbstractSyntax {
             virtual ~Boolean() {}
             bool Value() { return b; }
             virtual SchemeExpression* eval(Environment& env) { return new Boolean(b); }
+            virtual SchemeExpression* clone() { return new Boolean(b); }
             virtual string toString() { return (b ? "true" : "false"); }
         };
 
         class Linop: public BE {
-        private:
+        public:
             SchemeExpression *a, *b;
         public:
             Linop(SchemeExpression *a, SchemeExpression *b) : a(a), b(b) {}
@@ -55,6 +56,7 @@ namespace AbstractSyntax {
         public:
             And(SchemeExpression *a, SchemeExpression *b) : Linop(a, b) {}
             virtual ~And() {}
+            virtual SchemeExpression* clone() { return new And(a->clone(), b->clone()); }
         protected:
             virtual bool op(bool a, bool b) { return a && b; }
             virtual string name() { return "and"; }
@@ -64,6 +66,7 @@ namespace AbstractSyntax {
         public:
             Or(SchemeExpression *a, SchemeExpression *b) : Linop(a, b) {}
             virtual ~Or() {}
+            virtual SchemeExpression* clone() { return new And(a->clone(), b->clone()); }
         protected:
             virtual bool op(bool a, bool b) { return a || b; }
             virtual string name() { return "or"; }
@@ -75,6 +78,7 @@ namespace AbstractSyntax {
         public:
             Not(SchemeExpression *a) : a(a) {}
             virtual ~Not() { delete a; }
+            virtual SchemeExpression* clone() { return new Not(a->clone()); }
             virtual SchemeExpression* eval(Environment& env) {
                 if (!a) return NULL;
                 SchemeExpression* arg1 = a->eval(env);

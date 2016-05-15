@@ -38,6 +38,16 @@ namespace AbstractSyntax {
             }
             return NULL;
         }
+
+        string toString() {
+            ostringstream out;
+            out << "(env";
+            for (Binding *b = head; b != NULL; b = b->next) {
+                out << " {" << b->var << " " << b->bond->toString() << "}";
+            }
+            out << ")";
+            return out.str();
+        }
     };
 
 } // end namespace AbstractSyntax

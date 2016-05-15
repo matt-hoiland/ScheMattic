@@ -15,9 +15,11 @@ namespace AbstractSyntax {
         Symbol(string s) : s(s) {}
         virtual ~Symbol() {}
         string Value() { return s; }
+        virtual SchemeExpression* clone() { return new Symbol(s); }
         virtual SchemeExpression* eval(Environment& env) {
             SchemeExpression* se = env.find(s);
             if (se) { return se->eval(env); }
+            cout << "symbol: " << s << endl;
             return new Symbol(s);
         }
         virtual string toString() { return s; }

@@ -19,6 +19,7 @@ namespace AbstractSyntax {
     public:
         virtual ~SchemeExpression() {}
         virtual SchemeExpression* eval(Environment& env) = 0;
+        virtual SchemeExpression* clone() = 0;
         virtual string toString() = 0;
     };
 

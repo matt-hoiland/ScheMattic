@@ -16,7 +16,7 @@ namespace AbstractSyntax {
         };
 
         class NumericComparator: public CE {
-        private:
+        protected:
             SchemeExpression *a, *b;
         public:
             NumericComparator(SchemeExpression* a, SchemeExpression* b) : a(a), b(b) {}
@@ -48,6 +48,7 @@ namespace AbstractSyntax {
         public:
             LessThan(SchemeExpression* a, SchemeExpression* b) : NumericComparator(a, b) {}
             virtual ~LessThan() {}
+            virtual SchemeExpression* clone() { return new LessThan(a->clone(), b->clone()); }
         protected:
             virtual bool compare(double a, double b) { return a < b; }
             virtual string name() { return "<"; }
@@ -57,6 +58,7 @@ namespace AbstractSyntax {
         public:
             LessEqual(SchemeExpression* a, SchemeExpression* b) : NumericComparator(a, b) {}
             virtual ~LessEqual() {}
+            virtual SchemeExpression* clone() { return new LessEqual(a->clone(), b->clone()); }
         protected:
             virtual bool compare(double a, double b) { return a <= b; }
             virtual string name() { return "<="; }
@@ -66,6 +68,7 @@ namespace AbstractSyntax {
         public:
             GreaterEqual(SchemeExpression* a, SchemeExpression* b) : NumericComparator(a, b) {}
             virtual ~GreaterEqual() {}
+            virtual SchemeExpression* clone() { return new GreaterEqual(a->clone(), b->clone()); }
         protected:
             virtual bool compare(double a, double b) { return a >= b; }
             virtual string name() { return ">="; }
@@ -75,6 +78,7 @@ namespace AbstractSyntax {
         public:
             GreaterThan(SchemeExpression* a, SchemeExpression* b) : NumericComparator(a, b) {}
             virtual ~GreaterThan() {}
+            virtual SchemeExpression* clone() { return new GreaterThan(a->clone(), b->clone()); }
         protected:
             virtual bool compare(double a, double b) { return a > b; }
             virtual string name() { return ">"; }
@@ -86,6 +90,7 @@ namespace AbstractSyntax {
         public:
             Equal(SchemeExpression* a, SchemeExpression* b) : a(a), b(b) {}
             virtual ~Equal() { delete a; delete b; }
+            virtual SchemeExpression* clone() { return new Equal(a->clone(), b->clone()); }
             virtual SchemeExpression* eval(Environment& env) {
                 SchemeExpression* sa = a->eval(env);
                 SchemeExpression* sb = b->eval(env);

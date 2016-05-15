@@ -12,6 +12,7 @@ namespace AbstractSyntax {
         String(string s) : s(s) {}
         virtual ~String() {}
         virtual string Value() { return s; }
+        virtual SchemeExpression* clone() { return new String(s); }
         virtual SchemeExpression* eval(Environment& env) { return new String(s); }
         virtual string toString() { return "\"" + s + "\""; }
     };
