@@ -13,22 +13,13 @@ using std::string;
 
 namespace AbstractSyntax {
 
+    class Environment;
+
     class SchemeExpression {
     public:
         virtual ~SchemeExpression() {}
-        virtual SchemeExpression* eval() = 0;
+        virtual SchemeExpression* eval(Environment& env) = 0;
         virtual string toString() = 0;
-    };
-
-    class String: public SchemeExpression {
-    private:
-        string s;
-    public:
-        String(string s) : s(s) {}
-        virtual ~String() {}
-        virtual string Value() { return s; }
-        virtual SchemeExpression* eval() { return new String(s); }
-        virtual string toString() { return "\"" + s + "\""; }
     };
 
     SchemeExpression* parse(ConcreteSyntax::SExpression* sexp);

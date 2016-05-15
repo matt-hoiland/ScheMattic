@@ -21,9 +21,9 @@ namespace AbstractSyntax {
         public:
             NumericComparator(SchemeExpression* a, SchemeExpression* b) : a(a), b(b) {}
             virtual ~NumericComparator() { delete a; delete b; }
-            virtual SchemeExpression* eval() {
-                SchemeExpression* sa = a->eval();
-                SchemeExpression* sb = b->eval();
+            virtual SchemeExpression* eval(Environment& env) {
+                SchemeExpression* sa = a->eval(env);
+                SchemeExpression* sb = b->eval(env);
                 SchemeExpression* sc = NULL;
                 Number *na = NULL, *nb = NULL;
                 if ((na = dynamic_cast<Number*>(sa)) != NULL &&
@@ -86,9 +86,9 @@ namespace AbstractSyntax {
         public:
             Equal(SchemeExpression* a, SchemeExpression* b) : a(a), b(b) {}
             virtual ~Equal() { delete a; delete b; }
-            virtual SchemeExpression* eval() {
-                SchemeExpression* sa = a->eval();
-                SchemeExpression* sb = b->eval();
+            virtual SchemeExpression* eval(Environment& env) {
+                SchemeExpression* sa = a->eval(env);
+                SchemeExpression* sb = b->eval(env);
                 SchemeExpression* sc = NULL;
                 Boolean *ba = NULL, *bb = NULL;
                 Number *na = NULL, *nb = NULL;

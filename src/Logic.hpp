@@ -18,7 +18,7 @@ namespace AbstractSyntax {
             Boolean(bool b) : b(b) {}
             virtual ~Boolean() {}
             bool Value() { return b; }
-            virtual SchemeExpression* eval() { return new Boolean(b); }
+            virtual SchemeExpression* eval(Environment& env) { return new Boolean(b); }
             virtual string toString() { return (b ? "true" : "false"); }
         };
 
@@ -28,9 +28,9 @@ namespace AbstractSyntax {
         public:
             Linop(SchemeExpression *a, SchemeExpression *b) : a(a), b(b) {}
             virtual ~Linop() { delete a; delete b;}
-            virtual SchemeExpression* eval() {
-                SchemeExpression* arg1 = a->eval();
-                SchemeExpression* arg2 = b->eval();
+            virtual SchemeExpression* eval(Environment& env) {
+                SchemeExpression* arg1 = a->eval(env);
+                SchemeExpression* arg2 = b->eval(env);
                 Boolean *b1 = NULL, *b2 = NULL;
                 if (((b1 = dynamic_cast<Boolean*>(arg1)) != NULL) &&
                     ((b2 = dynamic_cast<Boolean*>(arg2)) != NULL)) {
@@ -75,9 +75,9 @@ namespace AbstractSyntax {
         public:
             Not(SchemeExpression *a) : a(a) {}
             virtual ~Not() { delete a; }
-            virtual SchemeExpression* eval() {
+            virtual SchemeExpression* eval(Environment& env) {
                 if (!a) return NULL;
-                SchemeExpression* arg1 = a->eval();
+                SchemeExpression* arg1 = a->eval(env);
                 Boolean *b1 = NULL;
                 if (((b1 = dynamic_cast<Boolean*>(arg1)) != NULL)) {
                     bool b = !b1->Value();

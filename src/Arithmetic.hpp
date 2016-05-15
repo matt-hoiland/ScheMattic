@@ -18,7 +18,7 @@ namespace AbstractSyntax {
             virtual ~Number() {}
             Number(double d) : d(d) {}
             double Value() { return d; }
-            virtual SchemeExpression* eval() { return new Number(d); }
+            virtual SchemeExpression* eval(Environment& env) { return new Number(d); }
             virtual string toString() {
                 ostringstream out;
                 out << d;
@@ -35,9 +35,9 @@ namespace AbstractSyntax {
                 delete a;
                 delete b;
             }
-            virtual SchemeExpression* eval() {
-                Number* A = dynamic_cast<Number*>(a->eval());
-                Number* B = dynamic_cast<Number*>(b->eval());
+            virtual SchemeExpression* eval(Environment& env) {
+                Number* A = dynamic_cast<Number*>(a->eval(env));
+                Number* B = dynamic_cast<Number*>(b->eval(env));
                 if (A && B) {
                     Number* n = new Number(operate(A->Value(), B->Value()));
                     delete A;

@@ -3,6 +3,7 @@
 
 #include "abstract.hpp"
 #include "interpreter.hpp"
+#include "String.hpp"
 
 namespace AbstractSyntax {
     namespace Keyword {
@@ -19,9 +20,9 @@ namespace AbstractSyntax {
             Import(String* f) : file(f) {}
             virtual ~Import() { delete file; }
 
-            virtual SchemeExpression* eval() {
+            virtual SchemeExpression* eval(Environment& env) {
                 Interpreter::FileInterpreter filer(file->Value() + ".scheme");
-                filer.interpret(cout);
+                filer.interpret(cout, env);
                 return NULL;
             }
 
@@ -37,15 +38,15 @@ namespace AbstractSyntax {
             Conditional(SchemeExpression *b, SchemeExpression *c, SchemeExpression* a)
                 : cond(b), cons(c), alt(a) {}
             virtual ~Conditional() { delete cond; delete cons; delete alt; }
-            virtual SchemeExpression* eval() {
-                SchemeExpression* s = cond->eval();
+            virtual SchemeExpression* eval(Environment& env) {
+                SchemeExpression* s = cond->eval(env);
                 Boolean* b = dynamic_cast<Boolean*>(s);
                 SchemeExpression* ret = NULL;
                 if (b) {
                     if (b->Value()) {
-                        ret = cons->eval();
+                        ret = cons->eval(env);
                     } else {
-                        ret = alt->eval();
+                        ret = alt->eval(env);
                     }
                 }
                 delete s;

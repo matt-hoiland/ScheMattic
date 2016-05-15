@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "Environment.hpp"
 #include "interpreter.hpp"
 
 using namespace std;
@@ -12,9 +13,10 @@ int main() {
     cout << OPENING << endl;
     bool done = false;
     Interpreter::LineInterpreter interp;
+    AbstractSyntax::Environment env;
     while (!done) {
         cout << PROMPT;
-        string line = interp.interpret(cin,cout);
+        string line = interp.interpret(cin, cout, env);
         if (line == "(quit)") {
             done = true;
         }
