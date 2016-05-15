@@ -7,6 +7,7 @@ using ConcreteSyntax::NumberExpression;
 using ConcreteSyntax::StringExpression;
 using ConcreteSyntax::SymbolExpression;
 #include "Logic.hpp"
+#include "Keywords.hpp"
 
 namespace AbstractSyntax {
     SchemeExpression* parse(ConcreteSyntax::SExpression* sexp) {
