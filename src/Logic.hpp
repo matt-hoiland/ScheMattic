@@ -1,6 +1,8 @@
 #ifndef LOGIC_H_
 #define LOGIC_H_
 
+#include "abstract.hpp"
+
 namespace AbstractSyntax {
     namespace Logic {
 

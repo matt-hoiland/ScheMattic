@@ -1,6 +1,8 @@
 #ifndef ARITHMETIC_H_
 #define ARITHMETIC_H_
 
+#include "abstract.hpp"
+
 namespace AbstractSyntax {
     namespace Arithmetic {
 
