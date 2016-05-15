@@ -14,9 +14,10 @@ namespace AbstractSyntax {
     public:
         Symbol(string s) : s(s) {}
         virtual ~Symbol() {}
+        string Value() { return s; }
         virtual SchemeExpression* eval(Environment& env) {
             SchemeExpression* se = env.find(s);
-            if (se) { return se; }
+            if (se) { return se->eval(env); }
             return new Symbol(s);
         }
         virtual string toString() { return s; }

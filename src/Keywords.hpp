@@ -4,6 +4,7 @@
 #include "abstract.hpp"
 #include "interpreter.hpp"
 #include "String.hpp"
+#include "Symbol.hpp"
 
 namespace AbstractSyntax {
     namespace Keyword {
@@ -54,6 +55,27 @@ namespace AbstractSyntax {
             }
             virtual string toString() {
                 return "(if " + cond->toString() + " " + cons->toString() + " " + alt->toString() + ")";
+            }
+        };
+
+        class Definition: public KE {
+        private:
+            SchemeExpression *sym, *bond;
+        public:
+            Definition(SchemeExpression *sym, SchemeExpression *bond) : sym(sym), bond(bond) {}
+            virtual ~Definition() { delete sym; delete bond; }
+            virtual SchemeExpression* eval(Environment& env) {
+                Symbol *symbol = dynamic_cast<Symbol*>(sym);
+                if (symbol) {
+                    SchemeExpression* be = bond->eval(env);
+                    env.bind(symbol->Value(), be);
+                    return be->eval(env);
+                } else {
+                    return NULL;
+                }
+            }
+            virtual string toString() {
+                return "(define " + sym->toString() + " " + bond->toString() + ")";
             }
         };
 

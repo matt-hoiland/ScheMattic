@@ -16,6 +16,7 @@ namespace AbstractSyntax {
             Binding *next;
             Binding(string k, SchemeExpression *v, Binding *n = NULL)
                 : var(k), bond(v), next(n) {}
+            virtual ~Binding() { delete bond; }
         } *head = NULL;
     public:
         Environment() {}

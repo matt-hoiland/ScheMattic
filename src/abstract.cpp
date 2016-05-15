@@ -41,6 +41,8 @@ namespace AbstractSyntax {
                         return new Comparator::GreaterEqual(a, b);
                     } else if (s == ">") {
                         return new Comparator::GreaterThan(a, b);
+                    } else if (s == "define") {
+                        return new Keyword::Definition(a, b);
                     }
                 }
                 delete a;
