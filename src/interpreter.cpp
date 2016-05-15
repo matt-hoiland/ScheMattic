@@ -17,7 +17,7 @@ string Interpreter::LineInterpreter::interpret(istream& in, ostream& out) {
             AbstractSyntax::SchemeExpression* se = AbstractSyntax::parse(expr);
             if (se) {
                 AbstractSyntax::SchemeExpression* result = se->eval();
-                out << (result != NULL ? result->toString() : "eval failed") << endl;
+                out << (result != NULL ? result->toString() + "\n" : "");
                 delete result;
                 delete se;
             } else {
