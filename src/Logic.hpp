@@ -82,7 +82,7 @@ namespace AbstractSyntax {
                 if (((b1 = dynamic_cast<Boolean*>(arg1)) != NULL)) {
                     bool b = !b1->Value();
                     delete b1;
-                    return new Boolean(!b);
+                    return new Boolean(b);
                 }
                 delete arg1;
                 return NULL;
