@@ -1,5 +1,10 @@
 #include "interpreter.hpp"
 
+using std::ifstream;
+using std::istream;
+using std::ostream;
+using std::string;
+
 string Interpreter::LineInterpreter::interpret(istream& in, ostream& out) {
     string line;
     getline(in, line);
@@ -28,5 +33,11 @@ string Interpreter::LineInterpreter::interpret(istream& in, ostream& out) {
 }
 
 void Interpreter::FileInterpreter::interpret(ostream& out) {
-
+    ifstream in(file_name);
+    if (in.is_open()) {
+        LineInterpreter liner;
+        while (!in.eof()) {
+            liner.interpret(in, out);
+        }
+    }
 }

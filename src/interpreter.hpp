@@ -4,6 +4,8 @@
 #include <iostream>
 using std::istream;
 using std::ostream;
+#include <fstream>
+using std::ifstream;
 #include <string>
 using std::string;
 
