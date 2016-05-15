@@ -33,6 +33,7 @@ SExpression* Parser::parseList(token::TokenStream& tokens) {
         if (tokens.hasNext()) {
             token = tokens.next();
         } else {
+            delete ret;
             throw invalid_syntax();
         }
     }
