@@ -20,6 +20,17 @@ namespace AbstractSyntax {
         virtual string toString() = 0;
     };
 
+    class String: public SchemeExpression {
+    private:
+        string s;
+    public:
+        String(string s) : s(s) {}
+        virtual ~String() {}
+        virtual string Value() { return s; }
+        virtual SchemeExpression* eval() { return new String(s); }
+        virtual string toString() { return "\"" + s + "\""; }
+    };
+
     SchemeExpression* parse(ConcreteSyntax::SExpression* sexp);
 
 } // end namespace AbstractSyntax

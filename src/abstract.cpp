@@ -39,6 +39,9 @@ namespace AbstractSyntax {
                     string s = op->symbol();
                     if (s == "not") {
                         return new Logic::Not(a);
+                    } else if (s == "import") {
+                        String* s = dynamic_cast<String*>(a);
+                        if (a) { return new Keyword::Import(s); }
                     }
                 }
             }
@@ -49,7 +52,7 @@ namespace AbstractSyntax {
         } else if (dynamic_cast<BooleanExpression*>(sexp)) {
             return new Logic::Boolean(((BooleanExpression*)sexp)->data());
         } else if (dynamic_cast<StringExpression*>(sexp)) {
-            return NULL;
+            return new String(((StringExpression*)sexp)->data());
         } else {
             return NULL;
         }
