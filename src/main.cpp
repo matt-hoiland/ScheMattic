@@ -25,15 +25,15 @@ int main() {
             ConcreteSyntax::SExpression* expr = ConcreteSyntax::Parser::parse(stream);
             if (expr) {
                 cout << expr->toString() << endl;
-                AbstractSyntax::AE* ae = AbstractSyntax::parse(expr);
-                if (ae) {
-                    AbstractSyntax::AE* result = ae->eval();
-                    cout << result->toString() << endl;
+                AbstractSyntax::SchemeExpression* se = AbstractSyntax::parse(expr);
+                if (se) {
+                    AbstractSyntax::SchemeExpression* result = se->eval();
+                    cout << (result != NULL ? result->toString() : "eval failed") << endl;
                     delete result;
+                    delete se;
                 } else {
-                    cout << "not arithmetic" << endl;
+                    cout << "parse failed" << endl;
                 }
-                delete ae;
             } else {
                 cout << "NULL expression" << endl;
             }
