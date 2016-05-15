@@ -1,0 +1,12 @@
+true
+false
+(not true)
+(not false)
+(and true true)
+(and true false)
+(and false false)
+(and false true)
+(or true true)
+(or true false)
+(or false false)
+(or false true)

@@ -1,0 +1,2 @@
+(import "test/arithmetic")
+(import "test/logic")
