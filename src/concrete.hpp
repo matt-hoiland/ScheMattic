@@ -35,11 +35,11 @@ namespace ConcreteSyntax {
         virtual string toString() { return toString(""); }
         virtual string toString(string m) {
             ostringstream out;
-            out << m << "\033[37;1m(\033[37;0m" << endl;
-            for (auto e : exprs) {
-                out << e->toString(m + " ") << endl;
+            out << "\033[37;1m(\033[37;0m";
+            for (unsigned int i = 0; i < exprs.size(); i++) {
+                out << (i > 0 ? " " : "") << exprs[i]->toString();
             }
-            out << m << "\033[37;1m)\033[37;0m";
+            out << "\033[37;1m)\033[37;0m";
             return out.str();
         }
     };
@@ -88,6 +88,7 @@ namespace ConcreteSyntax {
         string value;
     public:
         StringExpression(string s): value(s) {}
+        string data() { return value; }
         virtual string toString() { return toString(""); }
         virtual string toString(string m) {
             ostringstream out;
