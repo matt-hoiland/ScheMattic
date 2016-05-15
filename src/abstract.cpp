@@ -9,6 +9,7 @@ using ConcreteSyntax::StringExpression;
 using ConcreteSyntax::SymbolExpression;
 #include "Logic.hpp"
 #include "Keywords.hpp"
+#include "Symbol.hpp"
 
 namespace AbstractSyntax {
     SchemeExpression* parse(ConcreteSyntax::SExpression* sexp) {
@@ -69,7 +70,7 @@ namespace AbstractSyntax {
                 }
             }
         } else if (dynamic_cast<SymbolExpression*>(sexp)) {
-            return NULL;
+            return new Symbol(((SymbolExpression*)sexp)->symbol());
         } else if (dynamic_cast<NumberExpression*>(sexp)) {
             return new Arithmetic::Number(((NumberExpression*)sexp)->data());
         } else if (dynamic_cast<BooleanExpression*>(sexp)) {
