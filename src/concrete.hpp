@@ -75,6 +75,7 @@ namespace ConcreteSyntax {
         bool value;
     public:
         BooleanExpression(bool b): value(b) {}
+        bool data() { return value; }
         virtual string toString() { return toString(""); }
         virtual string toString(string m) {
             ostringstream out;
