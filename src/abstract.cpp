@@ -74,7 +74,7 @@ namespace AbstractSyntax {
                         return new Logic::Not(a);
                     } else if (s == "import") {
                         String* s = dynamic_cast<String*>(a);
-                        if (a) { return new Keyword::Import(s); }
+                        if (s) { return new Keyword::Import(s); }
                     }
                 }
                 delete a;
