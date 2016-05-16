@@ -9,10 +9,13 @@ using ConcreteSyntax::StringExpression;
 using ConcreteSyntax::SymbolExpression;
 #include "Logic.hpp"
 #include "Keywords.hpp"
+#include "Symbol.hpp"
 
 namespace AbstractSyntax {
     SchemeExpression* parse(ConcreteSyntax::SExpression* sexp) {
-        if (dynamic_cast<ListExpression*>(sexp)) {
+        if (dynamic_cast<SymbolExpression*>(sexp)) {
+            return new Symbol(((SymbolExpression*)sexp)->symbol());
+        } else if (dynamic_cast<ListExpression*>(sexp)) {
             ListExpression* li = (ListExpression*) sexp;
             if (li->size() == 3) {
                 SchemeExpression* a = parse((*li)[1]);
@@ -40,6 +43,24 @@ namespace AbstractSyntax {
                         return new Comparator::GreaterEqual(a, b);
                     } else if (s == ">") {
                         return new Comparator::GreaterThan(a, b);
+                    } else if (s == "define") {
+                        return new Keyword::Definition(a, b);
+                    } else if (s == "lambda") {
+                        ListExpression* plist = dynamic_cast<ListExpression*>((*li)[1]);
+                        if (plist) {
+                            vector<string> params;
+                            for (unsigned int i = 0; i < plist->size(); i++) {
+                                SymbolExpression* sym = dynamic_cast<SymbolExpression*>((*plist)[i]);
+                                if (sym) {
+                                    params.push_back(sym->symbol());
+                                } else {
+                                    delete b;
+                                    return NULL;
+                                }
+                            }
+                            delete a;
+                            return new Keyword::Lambda(params, b);
+                        }
                     }
                 }
                 delete a;
@@ -53,9 +74,10 @@ namespace AbstractSyntax {
                         return new Logic::Not(a);
                     } else if (s == "import") {
                         String* s = dynamic_cast<String*>(a);
-                        if (a) { return new Keyword::Import(s); }
+                        if (s) { return new Keyword::Import(s); }
                     }
                 }
+                delete a;
             } else if (li->size() == 4) {
                 SchemeExpression* cond = parse((*li)[1]);
                 SchemeExpression* cons = parse((*li)[2]);
@@ -67,9 +89,17 @@ namespace AbstractSyntax {
                         return new Keyword::Conditional(cond, cons, alt);
                     }
                 }
+                delete cond;
+                delete cons;
+                delete alt;
             }
-        } else if (dynamic_cast<SymbolExpression*>(sexp)) {
-            return NULL;
+            if (li->size() > 1) {
+                vector<SchemeExpression*> exprs;
+                for (unsigned int i = 0; i < li->size(); i++) {
+                    exprs.push_back(parse((*li)[i]));
+                }
+                return new Keyword::Application(exprs);
+            }
         } else if (dynamic_cast<NumberExpression*>(sexp)) {
             return new Arithmetic::Number(((NumberExpression*)sexp)->data());
         } else if (dynamic_cast<BooleanExpression*>(sexp)) {

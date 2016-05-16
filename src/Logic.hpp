@@ -2,6 +2,9 @@
 #define LOGIC_HPP_
 
 #include "abstract.hpp"
+#include "result.hpp"
+using ResultSyntax::BooleanValue;
+using ResultSyntax::Value;
 
 namespace AbstractSyntax {
     namespace Logic {
@@ -18,26 +21,27 @@ namespace AbstractSyntax {
             Boolean(bool b) : b(b) {}
             virtual ~Boolean() {}
             bool Value() { return b; }
-            virtual SchemeExpression* eval(Environment& env) { return new Boolean(b); }
+            virtual ResultSyntax::Value* eval(Environment& env) { return new BooleanValue(b); }
+            virtual SchemeExpression* clone() { return new Boolean(b); }
             virtual string toString() { return (b ? "true" : "false"); }
         };
 
         class Linop: public BE {
-        private:
+        public:
             SchemeExpression *a, *b;
         public:
             Linop(SchemeExpression *a, SchemeExpression *b) : a(a), b(b) {}
             virtual ~Linop() { delete a; delete b;}
-            virtual SchemeExpression* eval(Environment& env) {
-                SchemeExpression* arg1 = a->eval(env);
-                SchemeExpression* arg2 = b->eval(env);
-                Boolean *b1 = NULL, *b2 = NULL;
-                if (((b1 = dynamic_cast<Boolean*>(arg1)) != NULL) &&
-                    ((b2 = dynamic_cast<Boolean*>(arg2)) != NULL)) {
-                    bool r = op(b1->Value(), b2->Value());
+            virtual Value* eval(Environment& env) {
+                Value* arg1 = a->eval(env);
+                Value* arg2 = b->eval(env);
+                BooleanValue *b1 = NULL, *b2 = NULL;
+                if (((b1 = dynamic_cast<BooleanValue*>(arg1)) != NULL) &&
+                    ((b2 = dynamic_cast<BooleanValue*>(arg2)) != NULL)) {
+                    bool r = op(b1->val(), b2->val());
                     delete b1;
                     delete b2;
-                    return new Boolean(r);
+                    return new BooleanValue(r);
                 }
                 delete arg1;
                 delete arg2;
@@ -55,6 +59,7 @@ namespace AbstractSyntax {
         public:
             And(SchemeExpression *a, SchemeExpression *b) : Linop(a, b) {}
             virtual ~And() {}
+            virtual SchemeExpression* clone() { return new And(a->clone(), b->clone()); }
         protected:
             virtual bool op(bool a, bool b) { return a && b; }
             virtual string name() { return "and"; }
@@ -64,6 +69,7 @@ namespace AbstractSyntax {
         public:
             Or(SchemeExpression *a, SchemeExpression *b) : Linop(a, b) {}
             virtual ~Or() {}
+            virtual SchemeExpression* clone() { return new And(a->clone(), b->clone()); }
         protected:
             virtual bool op(bool a, bool b) { return a || b; }
             virtual string name() { return "or"; }
@@ -75,14 +81,15 @@ namespace AbstractSyntax {
         public:
             Not(SchemeExpression *a) : a(a) {}
             virtual ~Not() { delete a; }
-            virtual SchemeExpression* eval(Environment& env) {
+            virtual SchemeExpression* clone() { return new Not(a->clone()); }
+            virtual Value* eval(Environment& env) {
                 if (!a) return NULL;
-                SchemeExpression* arg1 = a->eval(env);
-                Boolean *b1 = NULL;
-                if (((b1 = dynamic_cast<Boolean*>(arg1)) != NULL)) {
-                    bool b = !b1->Value();
+                Value* arg1 = a->eval(env);
+                BooleanValue *b1 = NULL;
+                if (((b1 = dynamic_cast<BooleanValue*>(arg1)) != NULL)) {
+                    bool b = !b1->val();
                     delete b1;
-                    return new Boolean(b);
+                    return new BooleanValue(b);
                 }
                 delete arg1;
                 return NULL;

@@ -37,7 +37,7 @@ namespace ConcreteSyntax {
             ostringstream out;
             out << "\033[37;1m(\033[37;0m";
             for (unsigned int i = 0; i < exprs.size(); i++) {
-                out << (i > 0 ? " " : "") << exprs[i]->toString();
+                out << (i > 0 ? " " : "") << (exprs[i] ? exprs[i]->toString() : "NULL");
             }
             out << "\033[37;1m)\033[37;0m";
             return out.str();
