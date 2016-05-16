@@ -19,17 +19,22 @@ namespace ResultSyntax {
             Binding(string k, Value *v, Binding *n = NULL)
                 : var(k), bond(v), next(n) {}
             virtual ~Binding() { delete bond; }
+            Binding* clone() {
+                Binding *n = (next ? next->clone() : NULL);
+                return new Binding(var, bond->clone(), n);
+            }
         } *head = NULL;
     public:
         Environment() {}
+        Environment(const Environment& env) {
+            this->head = (env.head ? env.head->clone() : NULL);
+        }
         virtual ~Environment() {
-            // // cout<< "Dying..." << endl;
-            // while (head != NULL) {
-            //     Binding *b = head;
-            //     // cout<< "k: " << b->var << ", v: " << b->bond->toString() << endl;
-            //     head = head->next;
-            //     delete b;
-            // }
+            while (head != NULL) {
+                Binding *b = head;
+                head = head->next;
+                delete b;
+            }
         }
 
         void bind(string k, Value *v) {
@@ -53,14 +58,10 @@ namespace ResultSyntax {
         string toString() {
             ostringstream out;
             out << "(env";
-            // cout<< "stringin' the environs" << endl;
             for (Binding *b = head; b != NULL; b = b->next) {
-                // cout<< "k: " << b->var << ", v: " << (b->bond ? b->bond->toString() : "null") << endl;
                 out << " {" << b->var << " " << b->bond->toString() << "}";
             }
-            // cout<< "we finished: ";
             out << ")";
-            // cout<< out.str() << endl;
             return out.str();
         }
 
