@@ -9,3 +9,6 @@
 (= n 19)
 (= (g k) 62)
 (= k 31)
+(define inc-gen (lambda (inc) (lambda (n) (+ inc n))))
+(define up1 (inc-gen 1))
+(define fac ((lambda (x) (x x)) (lambda (fact-gen) (lambda (n) (if (= 0 n) 1 (* n ((fact-gen fact-gen) (- n 1))))))))
