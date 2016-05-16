@@ -73,16 +73,11 @@ namespace AbstractSyntax {
             virtual SchemeExpression* clone() { return new Definition(sym->clone(), bond->clone()); }
             virtual ResultSyntax::Value* eval(Environment& env) {
                 Symbol *symbol = dynamic_cast<Symbol*>(sym);
-                // cout<< "binding symbol: " << symbol->toString() << endl;
                 if (symbol) {
-                    // cout<< "prebond: " << bond->toString() << endl;
                     Value* be = bond->eval(env);
-                    // cout<< "bond: " << (be ? be->toString() : "null") << endl;
                     env.bind(symbol->Value(), be);
-                    // cout<< "curr env: " << env.toString() << endl;
                     return be->clone();
                 } else {
-                    // cout<< "returning null" << endl;
                     return NULL;
                 }
             }
@@ -100,10 +95,7 @@ namespace AbstractSyntax {
             virtual ~Lambda() { delete body; }
             virtual SchemeExpression* clone() { return new Lambda(params, body->clone()); }
             virtual ResultSyntax::Value* eval(Environment& env) {
-                // cout<< "eval lambda" << endl;
                 SchemeExpression* clone = body->clone();
-                // cout<< "clone: " << (clone ? clone->toString() : "null") << endl;
-                // cout<< "env: " << env.toString() << endl;
                 return new ClosureValue(env, params, clone);
             }
             virtual string toString() {
@@ -137,11 +129,8 @@ namespace AbstractSyntax {
             virtual ResultSyntax::Value* eval(Environment& env) {
                 Value* ret = NULL;
                 if (exprs.size() == 0) { return NULL; }
-                // cout<< "Application eval" << endl;
-                // cout<< exprs[0]->toString() << endl;
                 Value *first = exprs[0]->eval(env);
                 ClosureValue *func = dynamic_cast<ClosureValue*>(first);
-                // cout<< first->toString() << endl;
                 if (func) {
                     Environment boundEnv = func->getEnv();
                     vector<string> paramSyms = func->getParams();
@@ -150,8 +139,6 @@ namespace AbstractSyntax {
                         for (unsigned int i = 1; i < exprs.size(); i++) {
                             boundEnv.bind(paramSyms[i - 1], exprs[i]->eval(env));
                         }
-                        // cout<< boundEnv.toString() << endl;
-                        // cout<< boundBody->toString() << endl;
                         ret = boundBody->eval(boundEnv);
                         for (unsigned int i = 0; i < paramSyms.size(); i++) {
                             boundEnv.unbind();

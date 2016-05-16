@@ -20,16 +20,13 @@ namespace ResultSyntax {
         vector<string> getParams() { return params; }
         AbstractSyntax::SchemeExpression* getBody() { return body; }
         virtual string toString() {
-            // cout<< "making bacon pancakes" << endl;
             ostringstream out;
             out << "(closure (";
             for (unsigned int i = 0; i < params.size(); i++) {
                 out << params[i] << (i < params.size() - 1 ? " " : "");
             }
-            // cout<< "body: " << (body ? body->toString() : "null") << endl;
             out << ") " << body->toString() << " ";
             out << env.toString();
-            // cout<< "env to string didn't fail us now" << endl;
             out << ")";
             return out.str();
         }
