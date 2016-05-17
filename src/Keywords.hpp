@@ -1,15 +1,17 @@
 #ifndef KEYWORDS_HPP_
 #define KEYWORDS_HPP_
 
-#include "abstract.hpp"
-#include "interpreter.hpp"
+#include "AbstractSyntax.hpp"
+#include "Closure.hpp"
+#include "Interpreter.hpp"
 #include "String.hpp"
 #include "Symbol.hpp"
 
-#include "closure.hpp"
+using Interpreter::FileInterpreter;
 using ResultSyntax::BooleanValue;
 using ResultSyntax::ClosureValue;
 using ResultSyntax::Value;
+using std::cout;
 
 namespace AbstractSyntax {
     namespace Keyword {
@@ -26,8 +28,8 @@ namespace AbstractSyntax {
             Import(String* f) : file(f) {}
             virtual ~Import() { delete file; }
             virtual SchemeExpression* clone() { return new Import(file); }
-            virtual ResultSyntax::Value* eval(Environment& env) {
-                Interpreter::FileInterpreter filer(file->Value() + ".scheme");
+            virtual Value* eval(Environment& env) {
+                FileInterpreter filer(file->data() + ".scheme");
                 filer.interpret(cout, env);
                 return NULL;
             }
@@ -45,7 +47,7 @@ namespace AbstractSyntax {
                 : cond(b), cons(c), alt(a) {}
             virtual ~Conditional() { delete cond; delete cons; delete alt; }
             virtual SchemeExpression* clone() { return new Conditional(cond->clone(), cons->clone(), alt->clone()); }
-            virtual ResultSyntax::Value* eval(Environment& env) {
+            virtual Value* eval(Environment& env) {
                 Value* s = cond->eval(env);
                 BooleanValue* b = dynamic_cast<BooleanValue*>(s);
                 Value* ret = NULL;
@@ -71,11 +73,11 @@ namespace AbstractSyntax {
             Definition(SchemeExpression *sym, SchemeExpression *bond) : sym(sym), bond(bond) {}
             virtual ~Definition() { delete sym; delete bond; }
             virtual SchemeExpression* clone() { return new Definition(sym->clone(), bond->clone()); }
-            virtual ResultSyntax::Value* eval(Environment& env) {
+            virtual Value* eval(Environment& env) {
                 Symbol *symbol = dynamic_cast<Symbol*>(sym);
                 if (symbol) {
                     Value* be = bond->eval(env);
-                    env.bind(symbol->Value(), be);
+                    env.bind(symbol->data(), be);
                     return be->clone();
                 } else {
                     return NULL;
@@ -94,7 +96,7 @@ namespace AbstractSyntax {
             Lambda(vector<string> params, SchemeExpression* body) : params(params), body(body) {}
             virtual ~Lambda() { delete body; }
             virtual SchemeExpression* clone() { return new Lambda(params, body->clone()); }
-            virtual ResultSyntax::Value* eval(Environment& env) {
+            virtual Value* eval(Environment& env) {
                 SchemeExpression* clone = body->clone();
                 return new ClosureValue(env, params, clone);
             }
@@ -126,7 +128,7 @@ namespace AbstractSyntax {
                 }
                 return new Application(clones);
             }
-            virtual ResultSyntax::Value* eval(Environment& env) {
+            virtual Value* eval(Environment& env) {
                 Value* ret = NULL;
                 if (exprs.size() == 0) { return NULL; }
                 Value *first = exprs[0]->eval(env);

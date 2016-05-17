@@ -1,9 +1,11 @@
 #include <iostream>
+#include "Interpreter.hpp"
 
-#include "Environment.hpp"
-#include "interpreter.hpp"
-
-using namespace std;
+using Interpreter::LineInterpreter;
+using ResultSyntax::Environment;
+using std::cin;
+using std::cout;
+using std::endl;
 
 const string OPENING = "Welcome! type (quit) to exit";
 const string PROMPT = ">>> ";

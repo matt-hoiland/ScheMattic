@@ -2,9 +2,10 @@
 #define RESULT_HPP_
 
 #include <sstream>
-using std::ostringstream;
 #include <string>
+
 using std::string;
+using std::ostringstream;
 
 namespace ResultSyntax {
     class Value {

@@ -1,29 +1,32 @@
 #ifndef ABSTRACT_HPP_
 #define ABSTRACT_HPP_
 
-#include <iostream>
-using std::cout;
-using std::endl;
-#include <sstream>
-using std::ostringstream;
-#include <string>
-using std::string;
-
-#include "concrete.hpp"
+#include "ConcreteSyntax.hpp"
 #include "Environment.hpp"
+
+#include <iostream>
+#include <sstream>
+#include <string>
+
+using ConcreteSyntax::SExpression;
+using ResultSyntax::Environment;
+using ResultSyntax::Value;
+using std::string;
 
 namespace AbstractSyntax {
 
     class SchemeExpression {
     public:
         virtual ~SchemeExpression() {}
-        virtual ResultSyntax::Value* eval(ResultSyntax::Environment& env) = 0;
+        virtual Value* eval(Environment& env) = 0;
         virtual SchemeExpression* clone() = 0;
         virtual string toString() = 0;
     };
 
-    SchemeExpression* parse(ConcreteSyntax::SExpression* sexp);
-
+    class Parser {
+    public:
+        SchemeExpression* parse(SExpression* sexp);
+    };
 } // end namespace AbstractSyntax
 
 #endif /* ABSTRACT_HPP_ */

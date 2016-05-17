@@ -1,13 +1,10 @@
 #ifndef ENVIRONMNET_HPP_
 #define ENVIRONMNET_HPP_
 
-#include <iostream>
-using std::cout;
-using std::endl;
+#include "ResultSyntax.hpp"
 #include <string>
-using std::string;
 
-#include "result.hpp"
+using std::string;
 
 namespace ResultSyntax {
     class Environment {

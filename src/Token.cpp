@@ -1,7 +1,4 @@
-#include "token.hpp"
-
-#include <iostream>
-using namespace std;
+#include "Token.hpp"
 
 bool token::StartState::process(char data, string sym, IState*& next, IToken*& emitted) {
     if (isspace(data)) {

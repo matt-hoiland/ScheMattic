@@ -1,24 +1,25 @@
 #ifndef CLOSURE_HPP_
 #define CLOSURE_HPP_
 
-#include "result.hpp"
 #include "Environment.hpp"
-#include "abstract.hpp"
+#include "AbstractSyntax.hpp"
+
+using AbstractSyntax::SchemeExpression;
 
 namespace ResultSyntax {
     class ClosureValue: public Value {
     private:
         Environment env;
         vector<string> params;
-        AbstractSyntax::SchemeExpression* body;
+        SchemeExpression* body;
     public:
-        ClosureValue(Environment env, vector<string> params, AbstractSyntax::SchemeExpression* body)
+        ClosureValue(Environment env, vector<string> params, SchemeExpression* body)
             : env(env), params(params), body(body) {}
         virtual ~ClosureValue() { delete body; }
         virtual Value* clone() { return new ClosureValue(env, params, body->clone()); }
         Environment getEnv() { return env; }
         vector<string> getParams() { return params; }
-        AbstractSyntax::SchemeExpression* getBody() { return body; }
+        SchemeExpression* getBody() { return body; }
         virtual string toString() {
             ostringstream out;
             out << "(closure (";

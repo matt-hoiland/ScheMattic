@@ -1,8 +1,8 @@
 #ifndef LOGIC_HPP_
 #define LOGIC_HPP_
 
-#include "abstract.hpp"
-#include "result.hpp"
+#include "AbstractSyntax.hpp"
+
 using ResultSyntax::BooleanValue;
 using ResultSyntax::Value;
 
@@ -20,8 +20,8 @@ namespace AbstractSyntax {
         public:
             Boolean(bool b) : b(b) {}
             virtual ~Boolean() {}
-            bool Value() { return b; }
-            virtual ResultSyntax::Value* eval(Environment& env) { return new BooleanValue(b); }
+            bool data() { return b; }
+            virtual Value* eval(Environment& env) { return new BooleanValue(b); }
             virtual SchemeExpression* clone() { return new Boolean(b); }
             virtual string toString() { return (b ? "true" : "false"); }
         };

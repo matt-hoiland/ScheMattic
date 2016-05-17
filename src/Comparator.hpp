@@ -1,12 +1,12 @@
 #ifndef COMPARATOR_HPP_
 #define COMPARATOR_HPP_
 
-#include "abstract.hpp"
+#include "AbstractSyntax.hpp"
 #include "Arithmetic.hpp"
-using AbstractSyntax::Arithmetic::Number;
 #include "Logic.hpp"
+
+using AbstractSyntax::Arithmetic::Number;
 using AbstractSyntax::Logic::Boolean;
-#include "result.hpp"
 using ResultSyntax::BooleanValue;
 using ResultSyntax::NumberValue;
 using ResultSyntax::Value;
@@ -25,7 +25,7 @@ namespace AbstractSyntax {
         public:
             NumericComparator(SchemeExpression* a, SchemeExpression* b) : a(a), b(b) {}
             virtual ~NumericComparator() { delete a; delete b; }
-            virtual ResultSyntax::Value* eval(Environment& env) {
+            virtual Value* eval(Environment& env) {
                 Value* sa = a->eval(env);
                 Value* sb = b->eval(env);
                 Value* sc = NULL;
@@ -95,7 +95,7 @@ namespace AbstractSyntax {
             Equal(SchemeExpression* a, SchemeExpression* b) : a(a), b(b) {}
             virtual ~Equal() { delete a; delete b; }
             virtual SchemeExpression* clone() { return new Equal(a->clone(), b->clone()); }
-            virtual ResultSyntax::Value* eval(Environment& env) {
+            virtual Value* eval(Environment& env) {
                 Value* sa = a->eval(env);
                 Value* sb = b->eval(env);
                 Value* sc = NULL;

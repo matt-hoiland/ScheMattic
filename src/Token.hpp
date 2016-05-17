@@ -1,12 +1,12 @@
 #ifndef TOKEN_HPP_
 #define TOKEN_HPP_
 
-#include <string>
-using std::string;
-#include <vector>
-using std::vector;
-
 #include <cctype>
+#include <string>
+#include <vector>
+
+using std::string;
+using std::vector;
 
 namespace token {
 

@@ -1,10 +1,11 @@
 #ifndef ARITHMETIC_HPP_
 #define ARITHMETIC_HPP_
 
-#include "abstract.hpp"
-#include "result.hpp"
+#include "AbstractSyntax.hpp"
+
 using ResultSyntax::Environment;
 using ResultSyntax::NumberValue;
+using ResultSyntax::Value;
 
 namespace AbstractSyntax {
     namespace Arithmetic {
@@ -20,8 +21,8 @@ namespace AbstractSyntax {
         public:
             virtual ~Number() {}
             Number(double d) : d(d) {}
-            double Value() { return d; }
-            virtual ResultSyntax::Value* eval(Environment& env) { return new NumberValue(d); }
+            double data() { return d; }
+            virtual Value* eval(Environment& env) { return new NumberValue(d); }
             virtual SchemeExpression* clone() { return new Number(d); }
             virtual string toString() {
                 ostringstream out;
@@ -39,11 +40,11 @@ namespace AbstractSyntax {
                 delete a;
                 delete b;
             }
-            virtual ResultSyntax::Value* eval(Environment& env) {
-                ResultSyntax::Value *sa = a->eval(env), *sb = b->eval(env);
+            virtual Value* eval(Environment& env) {
+                Value *sa = a->eval(env), *sb = b->eval(env);
                 NumberValue* A = dynamic_cast<NumberValue*>(sa);
                 NumberValue* B = dynamic_cast<NumberValue*>(sb);
-                ResultSyntax::Value* ret = NULL;
+                Value* ret = NULL;
                 if (A && B) {
                     ret = new NumberValue(operate(A->val(), B->val()));
                     delete A;
@@ -60,7 +61,6 @@ namespace AbstractSyntax {
         protected:
             virtual double operate(double a, double d) = 0;
             virtual string op() = 0;
-            virtual SchemeExpression* make(SchemeExpression* a, SchemeExpression* b) = 0;
         };
 
         class Adder: public Binop {
@@ -72,10 +72,6 @@ namespace AbstractSyntax {
                 return a + b;
             }
             virtual string op() { return "+"; }
-            virtual SchemeExpression* make(SchemeExpression* a, SchemeExpression* b) {
-                cout << "new adder: a " << a->toString() << ", b " << b->toString() << endl;
-                return new Adder(a, b);
-            }
         };
 
         class Subtracter: public Binop {
@@ -87,9 +83,6 @@ namespace AbstractSyntax {
                 return a - b;
             }
             virtual string op() { return "-"; }
-            virtual SchemeExpression* make(SchemeExpression* a, SchemeExpression* b) {
-                return new Subtracter(a, b);
-            }
         };
 
         class Multiplier: public Binop {
@@ -101,9 +94,6 @@ namespace AbstractSyntax {
                 return a * b;
             }
             virtual string op() { return "*"; }
-            virtual SchemeExpression* make(SchemeExpression* a, SchemeExpression* b) {
-                return new Multiplier(a, b);
-            }
         };
 
         class Divider: public Binop {
@@ -115,9 +105,6 @@ namespace AbstractSyntax {
                 return a / b;
             }
             virtual string op() { return "/"; }
-            virtual SchemeExpression* make(SchemeExpression* a, SchemeExpression* b) {
-                return new Divider(a, b);
-            }
         };
 
     } // end namespace Arithmetic

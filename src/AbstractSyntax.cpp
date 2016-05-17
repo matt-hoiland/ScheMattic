@@ -1,18 +1,34 @@
-#include "abstract.hpp"
-#include "Arithmetic.hpp"
+#include "AbstractSyntax.hpp"
 #include "Comparator.hpp"
-#include "concrete.hpp"
+#include "Keywords.hpp"
+
+using AbstractSyntax::Arithmetic::Adder;
+using AbstractSyntax::Arithmetic::Divider;
+using AbstractSyntax::Arithmetic::Multiplier;
+using AbstractSyntax::Arithmetic::Number;
+using AbstractSyntax::Arithmetic::Subtracter;
+using AbstractSyntax::Comparator::LessThan;
+using AbstractSyntax::Comparator::LessEqual;
+using AbstractSyntax::Comparator::Equal;
+using AbstractSyntax::Comparator::GreaterEqual;
+using AbstractSyntax::Comparator::GreaterThan;
+using AbstractSyntax::Logic::And;
+using AbstractSyntax::Logic::Boolean;
+using AbstractSyntax::Logic::Or;
+using AbstractSyntax::Logic::Not;
+using AbstractSyntax::Keyword::Application;
+using AbstractSyntax::Keyword::Conditional;
+using AbstractSyntax::Keyword::Definition;
+using AbstractSyntax::Keyword::Import;
+using AbstractSyntax::Keyword::Lambda;
 using ConcreteSyntax::BooleanExpression;
 using ConcreteSyntax::ListExpression;
 using ConcreteSyntax::NumberExpression;
 using ConcreteSyntax::StringExpression;
 using ConcreteSyntax::SymbolExpression;
-#include "Logic.hpp"
-#include "Keywords.hpp"
-#include "Symbol.hpp"
 
 namespace AbstractSyntax {
-    SchemeExpression* parse(ConcreteSyntax::SExpression* sexp) {
+    SchemeExpression* Parser::parse(ConcreteSyntax::SExpression* sexp) {
         if (dynamic_cast<SymbolExpression*>(sexp)) {
             return new Symbol(((SymbolExpression*)sexp)->symbol());
         } else if (dynamic_cast<ListExpression*>(sexp)) {
@@ -24,27 +40,27 @@ namespace AbstractSyntax {
                 if (op) {
                     string s = op->symbol();
                     switch (s[0]) {
-                    case '+': return new Arithmetic::Adder(a, b);
-                    case '-': return new Arithmetic::Subtracter(a, b);
-                    case '*': return new Arithmetic::Multiplier(a, b);
-                    case '/': return new Arithmetic::Divider(a, b);
+                    case '+': return new Adder(a, b);
+                    case '-': return new Subtracter(a, b);
+                    case '*': return new Multiplier(a, b);
+                    case '/': return new Divider(a, b);
                     }
                     if (s == "and") {
-                        return new Logic::And(a, b);
+                        return new And(a, b);
                     } else if (s == "or") {
-                        return new Logic::Or(a, b);
+                        return new Or(a, b);
                     } else if (s == "<") {
-                        return new Comparator::LessThan(a, b);
+                        return new LessThan(a, b);
                     } else if (s == "<=") {
-                        return new Comparator::LessEqual(a, b);
+                        return new LessEqual(a, b);
                     } else if (s == "=") {
-                        return new Comparator::Equal(a, b);
+                        return new Equal(a, b);
                     } else if (s == ">=") {
-                        return new Comparator::GreaterEqual(a, b);
+                        return new GreaterEqual(a, b);
                     } else if (s == ">") {
-                        return new Comparator::GreaterThan(a, b);
+                        return new GreaterThan(a, b);
                     } else if (s == "define") {
-                        return new Keyword::Definition(a, b);
+                        return new Definition(a, b);
                     } else if (s == "lambda") {
                         ListExpression* plist = dynamic_cast<ListExpression*>((*li)[1]);
                         if (plist) {
@@ -59,7 +75,7 @@ namespace AbstractSyntax {
                                 }
                             }
                             delete a;
-                            return new Keyword::Lambda(params, b);
+                            return new Lambda(params, b);
                         }
                     }
                 }
@@ -71,10 +87,10 @@ namespace AbstractSyntax {
                 if (op) {
                     string s = op->symbol();
                     if (s == "not") {
-                        return new Logic::Not(a);
+                        return new Not(a);
                     } else if (s == "import") {
                         String* s = dynamic_cast<String*>(a);
-                        if (s) { return new Keyword::Import(s); }
+                        if (s) { return new Import(s); }
                     }
                 }
                 delete a;
@@ -86,7 +102,7 @@ namespace AbstractSyntax {
                 if (op) {
                     string s = op->symbol();
                     if (s == "if") {
-                        return new Keyword::Conditional(cond, cons, alt);
+                        return new Conditional(cond, cons, alt);
                     }
                 }
                 delete cond;
@@ -98,12 +114,12 @@ namespace AbstractSyntax {
                 for (unsigned int i = 0; i < li->size(); i++) {
                     exprs.push_back(parse((*li)[i]));
                 }
-                return new Keyword::Application(exprs);
+                return new Application(exprs);
             }
         } else if (dynamic_cast<NumberExpression*>(sexp)) {
-            return new Arithmetic::Number(((NumberExpression*)sexp)->data());
+            return new Number(((NumberExpression*)sexp)->data());
         } else if (dynamic_cast<BooleanExpression*>(sexp)) {
-            return new Logic::Boolean(((BooleanExpression*)sexp)->data());
+            return new Boolean(((BooleanExpression*)sexp)->data());
         } else if (dynamic_cast<StringExpression*>(sexp)) {
             return new String(((StringExpression*)sexp)->data());
         } else {
