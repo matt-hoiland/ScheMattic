@@ -8,7 +8,7 @@
 using std::string;
 using std::vector;
 
-namespace token {
+namespace Token {
 
     // Interfaces
     class IToken {
@@ -112,6 +112,6 @@ namespace token {
         void retreat() { i--; }
     };
 
-} // end namespace token
+} // end namespace Token
 
 #endif /* TOKEN_HPP_ */

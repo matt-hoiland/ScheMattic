@@ -13,12 +13,12 @@ using std::exception;
 using std::string;
 using std::ostringstream;
 using std::vector;
-using token::CloseParen;
-using token::IToken;
-using token::OpenParen;
-using token::String;
-using token::Symbol;
-using token::TokenStream;
+using Token::CloseParen;
+using Token::IToken;
+using Token::OpenParen;
+using Token::String;
+using Token::Symbol;
+using Token::TokenStream;
 
 namespace ConcreteSyntax {
     class SExpression {
@@ -107,32 +107,32 @@ namespace ConcreteSyntax {
 
     class Parser {
     public:
-        SExpression* parse(TokenStream& tokens) {
-            if (!tokens.hasNext()) { return NULL; }
-            IToken* token = tokens.next();
-            if (dynamic_cast<OpenParen*>(token)) {
-                return parseList(tokens);
-            } else if (dynamic_cast<Symbol*>(token)) {
-                return parseSymbol(dynamic_cast<Symbol*>(token));
-            } else if (dynamic_cast<CloseParen*>(token)) {
+        SExpression* parse(TokenStream& Tokens) {
+            if (!Tokens.hasNext()) { return NULL; }
+            IToken* Token = Tokens.next();
+            if (dynamic_cast<OpenParen*>(Token)) {
+                return parseList(Tokens);
+            } else if (dynamic_cast<Symbol*>(Token)) {
+                return parseSymbol(dynamic_cast<Symbol*>(Token));
+            } else if (dynamic_cast<CloseParen*>(Token)) {
                 throw invalid_syntax();
-            } else if (dynamic_cast<String*>(token)) {
-                return parseString(dynamic_cast<String*>(token));
+            } else if (dynamic_cast<String*>(Token)) {
+                return parseString(dynamic_cast<String*>(Token));
             } else {
                 return NULL;
             }
         }
 
     private:
-        SExpression* parseList(TokenStream& tokens) {
-            if (!tokens.hasNext()) { throw invalid_syntax(); }
-            IToken* token = tokens.next();
+        SExpression* parseList(TokenStream& Tokens) {
+            if (!Tokens.hasNext()) { throw invalid_syntax(); }
+            IToken* Token = Tokens.next();
             ListExpression* ret = new ListExpression();
-            while (!dynamic_cast<CloseParen*>(token)) {
-                tokens.retreat();
-                ret->add(parse(tokens));
-                if (tokens.hasNext()) {
-                    token = tokens.next();
+            while (!dynamic_cast<CloseParen*>(Token)) {
+                Tokens.retreat();
+                ret->add(parse(Tokens));
+                if (Tokens.hasNext()) {
+                    Token = Tokens.next();
                 } else {
                     delete ret;
                     throw invalid_syntax();
@@ -141,20 +141,20 @@ namespace ConcreteSyntax {
             return ret;
         }
 
-        SExpression* parseSymbol(Symbol* token) {
+        SExpression* parseSymbol(Symbol* Token) {
             try {
-                double d = stod(token->Value());
+                double d = stod(Token->Value());
                 return new NumberExpression(d);
             } catch (...) {
-                if (token->Value() == "true" || token->Value() == "false") {
-                    return new BooleanExpression(token->Value() == "true");
+                if (Token->Value() == "true" || Token->Value() == "false") {
+                    return new BooleanExpression(Token->Value() == "true");
                 }
-                return new SymbolExpression(token->Value());
+                return new SymbolExpression(Token->Value());
             }
         }
 
-        SExpression* parseString(String* token) {
-            return new StringExpression(token->Value());
+        SExpression* parseString(String* Token) {
+            return new StringExpression(Token->Value());
         }
     };
 } // end namespace parser

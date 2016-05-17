@@ -15,7 +15,7 @@ using std::ifstream;
 using std::istream;
 using std::ostream;
 using std::string;
-using token::TokenStream;
+using Token::TokenStream;
 
 namespace Interpreter {
 
