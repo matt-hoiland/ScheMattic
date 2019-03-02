@@ -38,3 +38,51 @@ A personal scheme interpreter
 - `==` ::= `(== AE AE) -> BE`
 - `>=` ::= `(>= AE AE) -> BE`
 - `>` ::= `(> AE AE) -> BE`
+
+---
+
+# 2017.06.02 -- ScheMattic 2.0
+
+## Syntax
+
+```
+expr ::= sexpr | literal
+sexpr ::= "(" SYMBOL expr* ")"
+literal ::= NUMBER | SYMBOL | BOOLEAN | STRING | CHARACTER
+SYMBOL ::= /[A-Za-z_][0-9A-Za-z_]*/
+NUMBER ::= /[-+]?([0-9]*\.?[0-9]+|[0-9]+)/
+BOOLEAN ::= /true/ | /false/
+STRING ::= <traditional c-string syntax, including escapes>
+CHARACTER ::= /'\c'/
+```
+
+## Value types:
+
+- Number
+- Boolean
+- String
+- Character
+- Pair
+- Closure
+
+## Reserved symbols
+
+### Core structure makers
+
+- bind ::=
+    - (bind SYMBOL expr) -> binds the value of the given sexpr to the given SYMBOL in the env
+    - (bind sexpr expr) -> creates a function whose named binding is the first SYMBOL of the sexpr given.
+- lambda
+- print ::=
+    - (print expr) -> prints the value of the given expression
+- import
+- true
+- false
+- and
+- or
+- not
+- if
+- cons
+- car
+- cdr
+- null
